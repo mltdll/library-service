@@ -1,3 +1,4 @@
+from django.db import transaction
 from rest_framework import serializers
 
 from book.models import Book
@@ -14,19 +15,21 @@ class BorrowSerializer(serializers.ModelSerializer):
     def validate(self, attrs):
         data = super(BorrowSerializer, self).validate(attrs)
 
-        book = Book.objects.get(id=attrs["book"].id)
+        book = attrs["book"]
 
         Borrowing.validate_book(book.inventory, serializers.ValidationError)
 
-        """
-        I don't know where i must do this
-        """
+        return data
 
+    @transaction.atomic
+    def create(self, validated_data):
+        data = Borrowing.objects.create(**validated_data)
+        book = validated_data["book"]
         book.inventory -= 1
         book.save()
 
         return data
 
 
-class BorrowDetailSerializer(BorrowSerializer):
+class ReadBorrowSerializer(BorrowSerializer):
     book = BookSerializer()
