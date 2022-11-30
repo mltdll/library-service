@@ -1,3 +1,4 @@
+from django_q.tasks import async_task
 from rest_framework import viewsets
 from rest_framework.permissions import IsAuthenticatedOrReadOnly
 
@@ -24,4 +25,7 @@ class BorrowViewSet(viewsets.ModelViewSet):
         return BorrowSerializer
 
     def perform_create(self, serializer):
-        serializer.save(user=self.request.user)
+        borrowing = serializer.save(user=self.request.user)
+        async_task(
+            "notification_service.notify.notify_borrowing_created", borrowing
+        )
