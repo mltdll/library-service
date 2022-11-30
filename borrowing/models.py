@@ -40,6 +40,11 @@ class Borrowing(models.Model):
 
     @staticmethod
     def validate_book(inventory: int, error_to_raise) -> None:
+    book = models.ForeignKey(Book, on_delete=models.CASCADE)
+    user = models.ForeignKey(get_user_model(), on_delete=models.CASCADE)
+
+    @staticmethod
+    def validate_book(inventory: int, error_to_raise: Exception) -> None:
         if inventory < 1:
             raise error_to_raise("We don't have this book in stock")
 
