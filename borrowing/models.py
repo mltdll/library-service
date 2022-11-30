@@ -12,14 +12,10 @@ class Borrowing(models.Model):
     expected_date = models.DateField()
     actual_return_date = models.DateField(blank=True, null=True)
     book = models.ForeignKey(
-        Book,
-        on_delete=models.CASCADE,
-        related_name="borrows"
+        Book, on_delete=models.CASCADE, related_name="borrows"
     )
     user = models.ForeignKey(
-        get_user_model(),
-        on_delete=models.CASCADE,
-        related_name="borrows"
+        get_user_model(), on_delete=models.CASCADE, related_name="borrows"
     )
 
     class Meta:
@@ -47,7 +43,13 @@ class Borrowing(models.Model):
         Borrowing.validate_book(self.book.inventory, ValidationError)
 
     def save(
-        self, force_insert=False, force_update=False, using=None, update_fields=None
+        self,
+        force_insert=False,
+        force_update=False,
+        using=None,
+        update_fields=None,
     ) -> None:
         self.full_clean()
-        return super(Borrowing, self).save(force_insert, force_update, using, update_fields)
+        return super(Borrowing, self).save(
+            force_insert, force_update, using, update_fields
+        )
