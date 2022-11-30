@@ -15,3 +15,4 @@ class PaymentSerializer(serializers.ModelSerializer):
             "session_id",
             "money",
         )
+        read_only_fields = ("id", "money",)
