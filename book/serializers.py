@@ -3,9 +3,6 @@ from book.models import Book
 
 
 class BookSerializer(serializers.ModelSerializer):
-    inventory = serializers.ReadOnlyField()
-    daily_fee = serializers.ReadOnlyField()
-
     class Meta:
         model = Book
         fields = [
@@ -16,3 +13,4 @@ class BookSerializer(serializers.ModelSerializer):
             "inventory",
             "daily_fee"
         ]
+        read_only_fields = ("id", "daily_fee",)
