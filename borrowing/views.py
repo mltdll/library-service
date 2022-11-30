@@ -2,11 +2,11 @@ from rest_framework import viewsets
 from rest_framework.permissions import IsAuthenticatedOrReadOnly
 
 from borrowing.models import Borrowing
-from borrowing.serializers import BorrowSerializer, BorrowDetailSerializer
+from borrowing.serializers import BorrowSerializer, ReadBorrowSerializer
 
 
 class BorrowViewSet(viewsets.ModelViewSet):
-    queryset = Borrowing.objects.all().prefetch_related("book")
+    queryset = Borrowing.objects.prefetch_related("book")
     permission_classes = (IsAuthenticatedOrReadOnly,)
 
     def get_queryset(self):
@@ -19,7 +19,7 @@ class BorrowViewSet(viewsets.ModelViewSet):
 
     def get_serializer_class(self):
         if self.action in ["list", "retrieve"]:
-            return BorrowDetailSerializer
+            return ReadBorrowSerializer
 
         return BorrowSerializer
 
