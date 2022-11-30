@@ -9,5 +9,4 @@ from .models import Book
 class BookViewSet(viewsets.ModelViewSet):
     serializer_class = BookSerializer
     queryset = Book.objects.all()
-    authentication_classes = (JWTAuthentication,)
     permission_classes = (IsAdminOrReadOnly,)
