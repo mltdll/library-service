@@ -13,4 +13,3 @@ class BookSerializer(serializers.ModelSerializer):
             "inventory",
             "daily_fee"
         ]
-        read_only_fields = ("id", "daily_fee",)
