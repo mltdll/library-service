@@ -26,7 +26,7 @@ def notify_borrowing_created(borrowing: Borrowing) -> int:
         f"User {user.email} (id={user.id}) created a new borrowing:\n\n"
         f"Book: {borrowing.book}\n"
         f"Date: {borrowing.borrow_date}\n"
-        f"Date due: {borrowing.expected_date}\n"
+        f"Date due: {borrowing.expected_date}"
     )
 
     return send_message(BOT_TOKEN, ADMIN_CHAT_ID, message)
