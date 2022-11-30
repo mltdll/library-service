@@ -27,8 +27,5 @@ jobs:
       - name: Run flake8
         run: flake8
 
-      - name: Make migrations
-        run: python manage.py migrate
-
       - name: Run tests
         run: python manage.py test
