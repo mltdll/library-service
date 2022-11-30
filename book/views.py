@@ -1,30 +1,13 @@
-from rest_framework import generics, permissions
+from rest_framework import viewsets
+from rest_framework_simplejwt.authentication import JWTAuthentication
+
+from .permissions import IsAdminOrReadOnly
 from .serializers import BookSerializer
 from .models import Book
 
 
-class BookList(generics.ListAPIView):
+class BookViewSet(viewsets.ModelViewSet):
     serializer_class = BookSerializer
-
-    def get_queryset(self):
-        user = self.request.user
-        return Book.objects.filter(user=user).order_by("title")
-
-
-class BookListCreate(generics.ListCreateAPIView):
-    serializer_class = BookSerializer
-    permission_classes = [permissions.IsAuthenticated]
-
-    def get_queryset(self):
-        user = self.request.user
-        return Book.objects.filter(user=user).order_by("title")
-
-
-class BookRetrieveUpdateDestroy(generics.RetrieveUpdateDestroyAPIView):
-    serializer_class = BookSerializer
-    permission_classes = [permissions.IsAuthenticated]
-
-    def get_queryset(self):
-        user = self.request.user
-
-        return Book.objects.filter(user=user)
+    queryset = Book.objects.all()
+    authentication_classes = (JWTAuthentication,)
+    permission_classes = (IsAdminOrReadOnly,)
