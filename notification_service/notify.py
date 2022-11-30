@@ -10,6 +10,9 @@ ADMIN_CHAT_ID = os.environ["CHAT_ID"]
 
 
 def send_message(bot_token: str, chat_id: str, text: str) -> int:
+    """
+    Send a message through a Telegram bot.
+    """
     api_method = "/sendMessage"
     full_url = f"{API_URL}{bot_token}{api_method}"
     payload = {"chat_id": chat_id, "text": text}
@@ -20,6 +23,10 @@ def send_message(bot_token: str, chat_id: str, text: str) -> int:
 
 
 def notify_borrowing_created(borrowing: Borrowing) -> int:
+    """
+    Send a notification about borrowing creation to the admin chat.
+    """
+
     user = borrowing.user
 
     message = (

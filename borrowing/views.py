@@ -38,6 +38,8 @@ class BorrowViewSet(viewsets.ModelViewSet):
 
     def perform_create(self, serializer):
         borrowing = serializer.save(user=self.request.user)
+
+        # It doesn't seem like the output of the task can be useful here.
         async_task(
             "notification_service.notify.notify_borrowing_created", borrowing
         )
