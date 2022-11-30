@@ -1,4 +1,10 @@
 from django.apps import AppConfig
+from django.db.models.signals import post_migrate
+
+
+def post_migrate_schedule_tasks(sender, **kwargs):
+    from .scheduled_tasks import schedule_tasks
+    schedule_tasks()
 
 
 class BorrowingConfig(AppConfig):
@@ -6,7 +12,4 @@ class BorrowingConfig(AppConfig):
     name = "borrowing"
 
     def ready(self):
-        from .scheduled_tasks import schedule_tasks
-
-        # Schedule all the necessary tasks at the startup of the project
-        schedule_tasks()
+        post_migrate.connect(post_migrate_schedule_tasks, sender=self)
