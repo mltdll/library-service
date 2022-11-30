@@ -10,8 +10,6 @@ class Migration(migrations.Migration):
     initial = True
 
     dependencies = [
-        ("book", "0002_alter_book_daily_fee"),
-        migrations.swappable_dependency(settings.AUTH_USER_MODEL),
     ]
 
     operations = [
