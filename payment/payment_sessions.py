@@ -10,8 +10,9 @@ def create_stripe_session(borrowing: Borrowing) -> stripe.checkout.Session:
     book = borrowing.book
 
     delta = borrowing.actual_return_date - borrowing.borrow_date
-    days = delta.days
-    total_price_cents = days * book.daily_fee * 100
+    # Took a book and returned it the same day? Pay anyway!
+    days = max(delta.days, 1)
+    total_price_cents = int(days * book.daily_fee * 100)
 
     return stripe.checkout.Session.create(
         line_items=[
