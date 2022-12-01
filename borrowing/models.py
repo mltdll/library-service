@@ -21,10 +21,6 @@ class Borrowing(models.Model):
     class Meta:
         constraints = [
             CheckConstraint(
-                check=Q(borrow_date__lte=Now()),
-                name="check_borrow_date",
-            ),
-            CheckConstraint(
                 check=Q(expected_date__gt=Now()),
                 name="check_expected_return_date",
             ),
