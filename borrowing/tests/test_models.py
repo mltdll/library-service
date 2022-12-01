@@ -26,7 +26,7 @@ class BorrowingTest(TestCase):
             self.book.save()
             Borrowing.objects.create(
                 expected_date="2022-12-26",
-                book_id=1,
+                book=self.book,
                 user=self.user
             )
         except ValidationError:
