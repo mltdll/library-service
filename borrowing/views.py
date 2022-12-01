@@ -4,6 +4,7 @@ from decimal import Decimal
 from django.db import transaction
 from django.shortcuts import get_object_or_404
 from django_q.tasks import async_task
+from drf_spectacular.utils import extend_schema, OpenApiParameter
 from rest_framework import viewsets
 from rest_framework.decorators import api_view
 from rest_framework.permissions import IsAuthenticatedOrReadOnly
@@ -73,6 +74,23 @@ class BorrowViewSet(viewsets.ModelViewSet):
         async_task(
             "notification_service.notify.notify_borrowing_created", borrowing
         )
+
+    @extend_schema(
+        parameters=[
+            OpenApiParameter(
+                name="user_id",
+                type=int,
+                description="Filter by user id for admin (example ?user_id=2)"
+            ),
+            OpenApiParameter(
+                name="is_active",
+                type=str,
+                description="Filter by active borrowings (example ?is_active=(yes or no)"
+            ),
+        ]
+    )
+    def list(self, request, *args, **kwargs):
+        return super().list(request, *args, **kwargs)
 
 
 @api_view(["GET"])
