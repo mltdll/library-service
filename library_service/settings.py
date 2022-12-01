@@ -155,3 +155,6 @@ Q_CLUSTER = {
 }
 
 STRIPE_API_KEY = os.environ["STRIPE_API_KEY"]
+
+TELEGRAM_BOT_TOKEN = os.environ["TELEGRAM_BOT_TOKEN"]
+TELEGRAM_CHAT_ID = os.environ["CHAT_ID"]

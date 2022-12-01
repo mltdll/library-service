@@ -2,12 +2,13 @@ import datetime
 import os
 
 import requests
+from django.conf import settings
 
 from borrowing.models import Borrowing
 
 API_URL = "https://api.telegram.org/bot"
-BOT_TOKEN = os.environ["TELEGRAM_BOT_TOKEN"]
-ADMIN_CHAT_ID = os.environ["CHAT_ID"]
+BOT_TOKEN = settings.TELEGRAM_BOT_TOKEN
+ADMIN_CHAT_ID = settings.TELEGRAM_CHAT_ID
 
 
 def send_message(bot_token: str, chat_id: str, text: str) -> int:
