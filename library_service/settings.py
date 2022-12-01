@@ -9,7 +9,14 @@ https://docs.djangoproject.com/en/4.1/topics/settings/
 For the full list of settings and their values, see
 https://docs.djangoproject.com/en/4.1/ref/settings/
 """
+import os
 from pathlib import Path
+
+from dotenv import load_dotenv
+
+# Load environment variables from .env
+
+load_dotenv()
 
 # Build paths inside the project like this: BASE_DIR / 'subdir'.
 BASE_DIR = Path(__file__).resolve().parent.parent
@@ -146,3 +153,8 @@ Q_CLUSTER = {
     "bulk": 10,
     "orm": "default",
 }
+
+STRIPE_API_KEY = os.environ["STRIPE_API_KEY"]
+
+TELEGRAM_BOT_TOKEN = os.environ["TELEGRAM_BOT_TOKEN"]
+TELEGRAM_CHAT_ID = os.environ["CHAT_ID"]

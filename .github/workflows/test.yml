@@ -5,6 +5,11 @@ on:
     branches:
       - "main"
 
+env:
+  TELEGRAM_BOT_TOKEN: 1234567890:abcdefghijklmnopqrstuvwxyz_ABCDEFGH
+  CHAT_ID: -123456789
+  STRIPE_API_KEY: not_a_key
+
 jobs:
   test:
     runs-on: ubuntu-latest

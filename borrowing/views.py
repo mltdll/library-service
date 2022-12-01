@@ -1,7 +1,8 @@
 from datetime import date
+from decimal import Decimal
 
+from django.db import transaction
 from django.shortcuts import get_object_or_404
-from django.urls import reverse
 from django_q.tasks import async_task
 from rest_framework import viewsets
 from rest_framework.decorators import api_view
@@ -10,6 +11,29 @@ from rest_framework.response import Response
 
 from borrowing.models import Borrowing
 from borrowing.serializers import BorrowSerializer, ReadBorrowSerializer
+from payment.models import Payment
+from payment.payment_sessions import create_stripe_session
+
+
+def create_payment(borrowing: Borrowing):
+    session = create_stripe_session(borrowing)
+
+    # This is where price is located inside a session. Couldn't they make it
+    # easier to find?
+    price_cents = session.list_line_items()["data"][0]["amount_total"]
+
+    price = Decimal(price_cents) / 100
+
+    payment_data = {
+        "status_payment": "PE",  # New payments are pending.
+        "type_payment": "PA",  # Type of the payment is payment.
+        "borrowing": borrowing,
+        "session_url": session.url,
+        "session_id": session.stripe_id,
+        "money": price,
+    }
+
+    return Payment.objects.create(**payment_data)
 
 
 class BorrowViewSet(viewsets.ModelViewSet):
@@ -53,14 +77,17 @@ class BorrowViewSet(viewsets.ModelViewSet):
 
 @api_view(["GET"])
 def success_payment(request, pk):
-    borrow = get_object_or_404(Borrowing, id=pk)
+    borrowing = get_object_or_404(Borrowing, id=pk)
 
-    if not borrow.actual_return_date:
-        borrow.actual_return_date = date.today()
-        borrow.book.inventory += 1
-        borrow.book.save()
-        borrow.save()
+    if not borrowing.actual_return_date:
+        with transaction.atomic():
+            borrowing.actual_return_date = date.today()
+            borrowing.book.inventory += 1
+            borrowing.book.save()
+            borrowing.save()
 
-    serializer = BorrowSerializer(borrow)
+            create_payment(borrowing)
+
+    serializer = BorrowSerializer(borrowing)
 
     return Response(serializer.data)
