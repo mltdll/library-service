@@ -12,4 +12,4 @@ class Payment(models.Model):
     borrowing = models.OneToOneField(Borrowing, on_delete=models.CASCADE)
     session_url = models.URLField()
     session_id = models.CharField(max_length=255)
-    money = models.DecimalField(max_digits=5, decimal_places=2)
+    money = models.DecimalField(max_digits=5, decimal_places=2, null=True)
