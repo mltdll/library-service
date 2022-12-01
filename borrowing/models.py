@@ -28,10 +28,6 @@ class Borrowing(models.Model):
                 check=Q(expected_date__gt=Now()),
                 name="check_expected_return_date",
             ),
-            CheckConstraint(
-                check=Q(actual_return_date__gt=Now()),
-                name="check_actual_return_date",
-            ),
         ]
 
     @staticmethod
