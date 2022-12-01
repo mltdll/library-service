@@ -15,6 +15,11 @@ def create_stripe_session(borrowing: Borrowing) -> stripe.checkout.Session:
     days = max(delta.days, 1)
     total_price_cents = int(days * book.daily_fee * 100)
 
+    delta_overdue = borrowing.actual_return_date - borrowing.expected_date
+    days_overdue = max(delta_overdue.days, 0)
+
+    total_price_cents += int(days_overdue * book.daily_fee * 100)
+
     return stripe.checkout.Session.create(
         line_items=[
             {
