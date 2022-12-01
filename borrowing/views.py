@@ -12,11 +12,23 @@ class BorrowViewSet(viewsets.ModelViewSet):
 
     def get_queryset(self):
         queryset = self.queryset
+        user_id = self.request.query_params.get("user_id")
+        is_active = self.request.query_params.get("is_active")
 
         if self.request.user.is_staff:
-            return queryset
+            if user_id:
+                queryset = queryset.filter(user=int(user_id))
 
-        return queryset.filter(user=self.request.user.id)
+        if not self.request.user.is_staff:
+            queryset = queryset.filter(user=self.request.user.id)
+
+        if is_active == "yes":
+            queryset = queryset.filter(actual_return_date__isnull=True)
+
+        if is_active == "no":
+            queryset = queryset.filter(actual_return_date__isnull=False)
+
+        return queryset
 
     def get_serializer_class(self):
         if self.action in ["list", "retrieve"]:
@@ -26,6 +38,8 @@ class BorrowViewSet(viewsets.ModelViewSet):
 
     def perform_create(self, serializer):
         borrowing = serializer.save(user=self.request.user)
+
+        # It doesn't seem like the output of the task can be useful here.
         async_task(
             "notification_service.notify.notify_borrowing_created", borrowing
         )
