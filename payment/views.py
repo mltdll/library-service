@@ -57,4 +57,3 @@ def success_view(request: Request, borrowing_pk) -> Response:
     payment.save()
 
     return Response(status=status.HTTP_200_OK)
-
