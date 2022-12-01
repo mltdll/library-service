@@ -80,12 +80,13 @@ class BorrowViewSet(viewsets.ModelViewSet):
             OpenApiParameter(
                 name="user_id",
                 type=int,
-                description="Filter by user id for admin (example ?user_id=2)"
+                description="Filter by user id for admin (ex. ?user_id=2)"
             ),
             OpenApiParameter(
                 name="is_active",
                 type=str,
-                description="Filter by active borrowings (example ?is_active=(yes or no)"
+                description="Filter by active borrowings "
+                            "(ex. ?is_active=(yes or no)"
             ),
         ]
     )
