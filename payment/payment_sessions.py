@@ -1,5 +1,6 @@
 import stripe
 from django.conf import settings
+from django.urls import reverse
 
 from borrowing.models import Borrowing
 
@@ -28,8 +29,10 @@ def create_stripe_session(borrowing: Borrowing) -> stripe.checkout.Session:
             }
         ],
         mode="payment",
-
-        # TODO: implement urls
-        success_url="http://localhost:8000/api/payment/success",
-        cancel_url="http://localhost:8000/api/payment/cancel",
+        # TODO: Yay, hardcoded localhost!
+        success_url="http://127.0.0.1:8000"
+        f"{reverse('payment:success', args=[borrowing.id])}"
+        "?session_id={CHECKOUT_SESSION_ID}",
+        cancel_url=f"http://127.0.0.1:8000{reverse('payment:cancel')}"
+        "?session_id={CHECKOUT_SESSION_ID}",
     )
