@@ -76,7 +76,7 @@ class BorrowViewSet(viewsets.ModelViewSet):
 
 
 @api_view(["GET"])
-def success_payment(request, pk):
+def return_borrowing_view(request, pk):
     borrowing = get_object_or_404(Borrowing, id=pk)
 
     if not borrowing.actual_return_date:
