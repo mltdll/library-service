@@ -33,7 +33,7 @@ def create_payment(borrowing: Borrowing):
         "money": price,
     }
 
-    return Payment(**payment_data)
+    return Payment.objects.create(**payment_data)
 
 
 class BorrowViewSet(viewsets.ModelViewSet):
